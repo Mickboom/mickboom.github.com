@@ -1,297 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Watch and Earn</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-            color: #333;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Venance Edson | Global Portfolio</title>
 
-        header {
-            background-color: #141414;
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+<style>
+:root{
+    --primary:#38bdf8;
+    --secondary:#6366f1;
+    --accent:#22c55e;
+    --bg:#020617;
+    --card:#020617cc;
+    --text:#e5e7eb;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    font-family:Segoe UI,system-ui;
+    background:radial-gradient(circle at top,#020617,#020617);
+    color:var(--text);
+}
 
-        header h1 {
-            margin: 0;
-            font-size: 1.5em;
-        }
+/* HEADER */
+header{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:20px;
+}
+.profile-img{
+    width:190px;height:190px;
+    border-radius:50%;
+    object-fit:cover;
+    border:4px solid var(--secondary);
+    box-shadow:0 0 35px var(--secondary);
+    animation:float 4s ease-in-out infinite;
+}
+@keyframes float{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-18px)}
+}
+header h1{
+    font-size:3.2rem;
+    background:linear-gradient(90deg,var(--primary),var(--secondary));
+    -webkit-background-clip:text;
+    color:transparent;
+}
+header p{margin-top:12px;font-size:1.2rem}
+.btn{
+    margin-top:25px;
+    padding:14px 34px;
+    border:none;
+    border-radius:30px;
+    background:linear-gradient(90deg,var(--primary),var(--secondary));
+    font-weight:bold;
+    cursor:pointer;
+    box-shadow:0 0 20px var(--primary);
+}
 
-        header .account-btn {
-            background: none;
-            color: white;
-            border: 1px solid white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
+/* SECTION */
+section{padding:80px 20px;max-width:1200px;margin:auto}
+.section-title{
+    text-align:center;
+    font-size:2.5rem;
+    margin-bottom:40px;
+    background:linear-gradient(90deg,var(--primary),var(--secondary));
+    -webkit-background-clip:text;
+    color:transparent;
+}
 
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+/* PROJECT */
+.project-highlight{
+    background:var(--card);
+    padding:35px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 0 35px rgba(99,102,241,.3);
+}
+.project-highlight a{
+    display:inline-block;
+    margin-top:15px;
+    color:#000;
+    background:linear-gradient(90deg,var(--accent),var(--primary));
+    padding:12px 28px;
+    border-radius:30px;
+    text-decoration:none;
+    font-weight:bold;
+}
 
-        #account-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+/* SKILLS */
+.skills{
+    max-width:700px;
+    margin:auto;
+}
+.skill{
+    margin-bottom:25px;
+}
+.skill span{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:6px;
+}
+.progress{
+    width:100%;
+    height:12px;
+    background:#020617;
+    border-radius:10px;
+    overflow:hidden;
+}
+.progress-bar{
+    height:100%;
+    width:0;
+    background:linear-gradient(90deg,var(--primary),var(--accent));
+    border-radius:10px;
+    box-shadow:0 0 15px var(--primary);
+}
 
-        #account-modal .modal-content {
-            background: #141414;
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        #account-modal h2 {
-            margin: 0 0 20px;
-        }
-
-        #account-modal input {
-            padding: 10px;
-            width: 100%;
-            border: none;
-            border-radius: 4px;
-            margin-bottom: 15px;
-        }
-
-        #account-modal button {
-            background-color: #e50914;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-        }
-
-        #account-modal .switch-btn {
-            background: none;
-            border: none;
-            color: #e50914;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        #overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-
-        footer {
-            text-align: center;
-            padding: 10px 20px;
-            background-color: #141414;
-            color: white;
-        }
-
-        .wallet-section {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .wallet-section button {
-            margin: 5px;
-            padding: 10px 20px;
-            background-color: #e50914;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .wallet-section .points, .wallet-section .balance {
-            font-size: 1.1em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .ad-section {
-            margin: 20px 0;
-            text-align: center;
-        }
-    </style>
+/* FOOTER */
+footer{
+    text-align:center;
+    padding:25px;
+    background:#020617;
+}
+</style>
 </head>
+
 <body>
-    <header>
-        <h1>Watch and Earn</h1>
-        <button class="account-btn" onclick="openAccountModal('login')">Account</button>
-    </header>
 
-    <div id="overlay" onclick="closeAccountModal()"></div>
+<header>
+    <img src="vena.png" class="profile-img">
+    <h1>Venance Edson</h1>
+    <p>IT Student • Software Developer • Cyber Security • Graphics Designer</p>
+    <button class="btn" onclick="go('project')">View My Project</button>
+</header>
 
-    <div id="account-modal">
-        <div class="modal-content">
-            <h2 id="modal-title">Login</h2>
-            <form id="account-form" onsubmit="handleAccountAction(event)">
-                <input type="text" id="modal-username" placeholder="Email or Phone" required>
-                <input type="password" id="modal-password" placeholder="Password" required>
-                <button type="submit">Continue</button>
-                <p>
-                    <span id="modal-switch-text">New to Watch and Earn?</span>
-                    <button type="button" class="switch-btn" onclick="switchModal()">Sign Up Now</button>
-                </p>
-            </form>
+<section id="project">
+    <h2 class="section-title">Featured Project</h2>
+    <div class="project-highlight">
+        <h3>🎬 Alright Movies Platform</h3>
+        <p>
+            Website ya kisasa ya <b>kutazama na kupakua movies</b> yenye muonekano
+            wa kimataifa na maboresho yanayoendelea.
+        </p>
+        <a href="https://mickboom.github.io/Alright-studios/" target="_blank">
+            Visit Live Project →
+        </a>
+    </div>
+</section>
+
+<section id="skills">
+    <h2 class="section-title">My Skills</h2>
+    <div class="skills">
+
+        <div class="skill">
+            <span><b>HTML / CSS</b><b>90%</b></span>
+            <div class="progress"><div class="progress-bar" data-level="90"></div></div>
         </div>
+
+        <div class="skill">
+            <span><b>JavaScript</b><b>85%</b></span>
+            <div class="progress"><div class="progress-bar" data-level="85"></div></div>
+        </div>
+
+        <div class="skill">
+            <span><b>Software Development</b><b>80%</b></span>
+            <div class="progress"><div class="progress-bar" data-level="80"></div></div>
+        </div>
+
+        <div class="skill">
+            <span><b>Cyber Security</b><b>70%</b></span>
+            <div class="progress"><div class="progress-bar" data-level="70"></div></div>
+        </div>
+
+        <div class="skill">
+            <span><b>Graphics Design</b><b>75%</b></span>
+            <div class="progress"><div class="progress-bar" data-level="75"></div></div>
+        </div>
+
     </div>
-
-    <div class="container">
-        <section class="wallet-section">
-            <div class="points">Points: <span id="user-points">0</span></div>
-            <div class="balance">Balance: $<span id="user-balance">0.00</span></div>
-            <button onclick="handleDeposit()">Deposit Money</button>
-            <button onclick="handleWithdraw()">Withdraw Money</button>
-        </section>
-
-        <section class="ad-section">
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6291587953834794" crossorigin="anonymous"></script>
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-format="autorelaxed"
-                 data-ad-client="ca-pub-6291587953834794"
-                 data-ad-slot="8183625273"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </section>
+</section>
+  
+<section id="education">
+    <h2 class="section-title">Education</h2>
+    <div class="edu-card">
+        <h3>IT Student at Catholic University of Mbeya (CUoM)</h3>
+        <p>
+            Mimi ni mwanafunzi wa <b>Information Technology</b> katika
+            <a href="https://www.cuom.ac.tz" target="_blank" style="color:#38bdf8;text-decoration:none;">
+                Catholic University of Mbeya (CUoM)
+            </a>, Mbeya, Tanzania.<br>
+            CUoM ni chuo kikuu cha kibinafsi kinachotoa elimu ya ubora wa juu katika nyanja za Teknolojia, Biashara, Elimu na Sayansi ya Jamii, kikiweka mkazo kwenye maadili, ubunifu na utafiti.
+        </p>
     </div>
+</section>
 
-    <footer>
-        <p>&copy; 2025 Watch and Earn. All Rights Reserved.</p>
-    </footer>
+<section id="CONTACT">
+    <h2 class="section-title">CONTACT ME</h2>
+    <div class="edu-card">
+        <h3>Contact me at Whatsapp/ Email</h3>
+        <p><br>
+           Whatsapp +255756656056<br>Email edsonvenance823@gmail.com</br> 
+            <target="_blank" style="color:#38bdf8;text-decoration:none;">
+  
+        </p>
+    </div>
+</section>
+    
+    
+<footer>
+    © 2026 | Venance Edson • Call me LUDO
+</footer>
 
-    <script>
-        let users = [
-            { username: "testuser", password: "1234", phone: "", points: 0, balance: 0.0 }
-        ];
+<script>
+function go(id){
+    document.getElementById(id).scrollIntoView({behavior:"smooth"});
+}
 
-        let currentUser = null;
-        let isLoginMode = true;
-
-        function openAccountModal(mode) {
-            isLoginMode = mode === 'login';
-            switchModal();
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('account-modal').style.display = 'flex';
+/* Animate skills when visible */
+const bars=document.querySelectorAll(".progress-bar");
+const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+        if(entry.isIntersecting){
+            const level=entry.target.getAttribute("data-level");
+            entry.target.style.width=level+"%";
         }
+    });
+},{threshold:0.6});
 
-        function closeAccountModal() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('account-modal').style.display = 'none';
-        }
+bars.forEach(bar=>observer.observe(bar));
+</script>
 
-        function switchModal() {
-            isLoginMode = !isLoginMode;
-            document.getElementById('modal-title').textContent = isLoginMode ? 'Login' : 'Sign Up';
-            document.getElementById('modal-switch-text').textContent = isLoginMode ? "New to Watch and Earn?" : 'Already have an account?';
-            document.querySelector('.switch-btn').textContent = isLoginMode ? 'Sign Up Now' : 'Login';
-        }
-
-        function handleAccountAction(event) {
-            event.preventDefault();
-
-            const username = document.getElementById('modal-username').value;
-            const password = document.getElementById('modal-password').value;
-
-            if (isLoginMode) {
-                const user = users.find(u => u.username === username);
-                if (user && user.password === password) {
-                    currentUser = user;
-                    updateUserDetails();
-                    alert(`Welcome back, ${username}!`);
-                    closeAccountModal();
-                } else {
-                    alert('Incorrect username or password.');
-                }
-            } else {
-                if (users.some(u => u.username === username)) {
-                    alert('Username already taken. Please choose another.');
-                } else {
-                    users.push({ username, password, phone: "", points: 0, balance: 0.0 });
-                    alert('Account created successfully. You can now log in.');
-                    switchModal();
-                }
-            }
-        }
-
-        function updateUserDetails() {
-            if (currentUser) {
-                document.getElementById('user-points').textContent = currentUser.points;
-                document.getElementById('user-balance').textContent = currentUser.balance.toFixed(2);
-            }
-        }
-
-        function handleDeposit() {
-            if (!currentUser) {
-                alert('You must log in to perform this action.');
-                return;
-            }
-            const amount = prompt('Enter the amount to deposit:');
-            if (amount && !isNaN(amount) && amount > 0) {
-                currentUser.balance += parseFloat(amount);
-                updateUserDetails();
-                alert('Deposit successful!');
-            } else {
-                alert('Invalid amount.');
-            }
-        }
-
-        function handleWithdraw() {
-            if (!currentUser) {
-                alert('You must log in to perform this action.');
-                return;
-            }
-            const amount = prompt('Enter the amount to withdraw:');
-            if (amount && !isNaN(amount) && amount > 0 && amount <= currentUser.balance) {
-                currentUser.balance -= parseFloat(amount);
-                updateUserDetails();
-                alert('Withdrawal successful!');
-            } else {
-                alert('Invalid or insufficient funds.');
-            }
-        }
-    </script>
 </body>
 </html>
-
-
-
-
-
-                                                                           
-              

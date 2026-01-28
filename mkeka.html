@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LUDO |MIKEKA YA LEO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:"Segoe UI",Arial,sans-serif;
+  background:#f5f7fb;
+  color:#222;
+}
+section{padding:60px 20px}
+h2,h3{text-align:center;color:#0a58ca}
+
+/* cards */
+.card{
+  max-width:380px;
+  margin:25px auto;
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+  padding:18px;
+}
+.card img{width:100%;border-radius:10px}
+.card p{font-size:15px}
+
+/* buttons */
+.bet-btn{
+  display:inline-block;
+  padding:10px 22px;
+  background:#0a58ca;
+  color:#fff;
+  text-decoration:none;
+  border-radius:25px;
+  font-size:14px;
+}
+.bet-btn:hover{background:#084298}
+
+.countdown{
+  color:#dc3545;
+  font-weight:600;
+  margin:8px 0;
+}
+
+/* admin */
+.admin-login,.admin{
+  max-width:500px;
+  margin:auto;
+  background:#fff;
+  border-radius:14px;
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+.admin{display:none}
+
+.admin input{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+.admin button,.admin-login button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:30px;
+  background:#0a58ca;
+  color:#fff;
+  font-weight:600;
+  margin-top:10px;
+  cursor:pointer;
+}
+
+.admin .danger{background:#dc3545}
+.admin .edit{background:#198754}
+
+.admin-tools{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+.admin-tools button{flex:1}
+</style>
+</head>
+
+<body>
+
+<!-- PREDICTIONS -->
+<section>
+  <h2>MKEKA WA LEO</h2>
+  <div id="predictionList"></div>
+</section>
+
+<!-- ADMIN LOGIN -->
+<section class="admin-login" id="adminLogin">
+  <h3>🔐 Admin Login</h3>
+  <input type="password" id="adminPass" placeholder="Admin password">
+  <button onclick="loginAdmin()">Login</button>
+</section>
+
+<!-- ADMIN PANEL -->
+<section class="admin" id="adminPanel">
+  <h3>⚙ Admin Panel</h3>
+
+  <input type="hidden" id="editIndex">
+
+  <input type="text" id="code" placeholder="SportyBet Code">
+  <input type="text" id="link" placeholder="SportyBet Link">
+  <input type="datetime-local" id="time">
+  <input type="text" id="image" placeholder="Image name (optional)">
+
+  <label>
+    <input type="checkbox" id="showImage" checked> Onyesha Picha
+  </label>
+
+  <button onclick="savePrediction()">Save Prediction</button>
+  <button class="danger" onclick="logoutAdmin()">Logout</button>
+</section>
+
+<script>
+const ADMIN_PASSWORD = "1419";
+let predictions = JSON.parse(localStorage.getItem("predictions")) || [];
+
+/* admin auth */
+function loginAdmin(){
+  if(adminPass.value===ADMIN_PASSWORD){
+    adminLogin.style.display="none";
+    adminPanel.style.display="block";
+    localStorage.setItem("admin","1");
+    render();
+  } else alert("Wrong password");
+}
+function logoutAdmin(){
+  localStorage.removeItem("admin");
+  location.reload();
+}
+if(localStorage.getItem("admin")){
+  adminLogin.style.display="none";
+  adminPanel.style.display="block";
+}
+
+/* add or edit */
+function savePrediction(){
+  const data={
+    code:code.value,
+    link:link.value,
+    time:time.value,
+    image:image.value,
+    showImage:showImage.checked
+  };
+
+  if(editIndex.value===""){
+    predictions.push(data);
+  } else {
+    predictions[editIndex.value]=data;
+    editIndex.value="";
+  }
+  localStorage.setItem("predictions",JSON.stringify(predictions));
+  clearForm();
+  render();
+}
+
+/* edit */
+function editPrediction(i){
+  const p=predictions[i];
+  code.value=p.code;
+  link.value=p.link;
+  time.value=p.time;
+  image.value=p.image;
+  showImage.checked=p.showImage;
+  editIndex.value=i;
+  window.scrollTo(0,document.body.scrollHeight);
+}
+
+/* delete */
+function deletePrediction(i){
+  if(confirm("Delete this prediction?")){
+    predictions.splice(i,1);
+    localStorage.setItem("predictions",JSON.stringify(predictions));
+    render();
+  }
+}
+
+function clearForm(){
+  code.value="";
+  link.value="";
+  time.value="";
+  image.value="";
+  showImage.checked=true;
+}
+
+/* render */
+function render(){
+  predictionList.innerHTML="";
+  predictions.forEach((p,i)=>{
+    predictionList.innerHTML+=`
+      <div class="card">
+        ${p.showImage && p.image ? `<img src="${p.image}">` : ""}
+        <p><strong>Code:</strong> ${p.code}</p>
+        <div class="countdown" id="t${i}"></div>
+        <a href="${p.link}" target="_blank" class="bet-btn">Open SportyBet</a>
+
+        ${localStorage.getItem("admin") ? `
+        <div class="admin-tools">
+          <button class="edit" onclick="editPrediction(${i})">Edit</button>
+          <button class="danger" onclick="deletePrediction(${i})">Delete</button>
+        </div>` : ""}
+      </div>
+    `;
+    countdown(p.time,`t${i}`);
+  });
+}
+
+function countdown(time,id){
+  setInterval(()=>{
+    const diff=new Date(time)-new Date();
+    if(diff<=0){
+      document.getElementById(id).innerText="⛔ Match Started";
+      return;
+    }
+    const h=Math.floor(diff/3600000);
+    const m=Math.floor((diff%3600000)/60000);
+    const s=Math.floor((diff%60000)/1000);
+    document.getElementById(id).innerText=`⏳ ${h}h ${m}m ${s}s`;
+  },1000);
+}
+
+render();
+</script>
+
+</body>
+</html>
